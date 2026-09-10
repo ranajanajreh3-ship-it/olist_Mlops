@@ -1,0 +1,5 @@
+outs:
+- md5: b6ed8c4a70a8a910ab325e1997e3bdd4
+  size: 21
+  hash: md5
+  path: final_threshold.pkl
