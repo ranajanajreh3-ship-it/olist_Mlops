@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Logs
+*.log
+
+# Local / unrelated folders
+Contacts/
+CrossDevice/
+
+# Virtual environment
+.venv/
+venv/
+
+# IDE
+.vscode/
+.idea/
+
+# Local datasets and extra artifacts
+notebooks/geo_data.csv
+notebooks/train.csv
+data/ML_table.csv
+data/ML_table_labeled.csv
+data/Rana_delver.db
+data/Rana_delver.sqbpro
+data/geo_data.csv
+data/train_data_2.csv
+models/X_train_transformed.pkl
+models/features_name.pkl
+models/final_results.pkl

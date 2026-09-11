@@ -1,0 +1,11 @@
+data:
+  train: data/train.csv
+  validation: data/validation.csv
+  test: data/test.csv
+
+model:
+  path: models/final_random_forest.pkl
+  threshold: 0.4
+
+preprocessing:
+  transformer: models/transformer.pkl

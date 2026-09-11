@@ -1,0 +1,13 @@
+numpy==2.4.4
+pandas==3.0.3
+scikit-learn==1.9.0
+PyYAML==6.0.3
+joblib==1.5.3
+fastapi==0.136.1
+uvicorn==0.41.0
+mlflow==3.5.0
+great_expectations==1.8.0
+python-json-logger==3.3.0
+prometheus-client==0.23.1
+dvc==3.67.1
+dagshub==0.7.1

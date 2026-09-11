@@ -1,0 +1,5 @@
+pytest==8.4.2
+pytest-cov==7.0.0
+ruff==0.13.2
+black==25.9.0
+pre-commit==4.3.0
