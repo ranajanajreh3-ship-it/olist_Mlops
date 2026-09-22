@@ -7,10 +7,7 @@ from app.model_loader import(
     load_transformer,
     load_threshold,
 )
-from src.predictor import (
-    predict as run_prediction,
-    MODEL_FEATURES,
-)
+from src.predictor import predict as run_prediction
 
 app = FastAPI(
     title="Olist Delivery Prediction API",
