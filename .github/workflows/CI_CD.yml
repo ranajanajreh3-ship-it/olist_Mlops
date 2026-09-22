@@ -11,7 +11,9 @@ jobs:                           #Github executes a specific set of tasks
         with:                           
          python-version: "3.13" 
       - name: Install dependencies
-        run: pip install -r requirements/requirements.txt      # Install all the libraries that my project needs.
+        run: |
+         pip install -r requirements/requirements.txt
+         pip install -r requirements/requirements-dev.txt     # Install all the libraries that my project needs.
       - name: Lint                 #Lint looks for problems or errors in Python's writing style.
         run: ruff check .  
       - name: Format check
