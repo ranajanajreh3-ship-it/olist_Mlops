@@ -13,22 +13,82 @@ NUMERIC_FEATURES = [
 
 CATEGORICAL_FEATURES = {
     "seller_state": [
-        "AC", "AM", "BA", "CE", "DF", "ES", "GO", "MA",
-        "MG", "MS", "MT", "PA", "PB", "PE", "PI", "PR",
-        "RJ", "RN", "RO", "RS", "SC", "SE", "SP", "Unknown"
+        "AC",
+        "AM",
+        "BA",
+        "CE",
+        "DF",
+        "ES",
+        "GO",
+        "MA",
+        "MG",
+        "MS",
+        "MT",
+        "PA",
+        "PB",
+        "PE",
+        "PI",
+        "PR",
+        "RJ",
+        "RN",
+        "RO",
+        "RS",
+        "SC",
+        "SE",
+        "SP",
+        "Unknown",
     ],
     "customer_state": [
-        "AC", "AL", "AM", "AP", "BA", "CE", "DF", "ES", "GO",
-        "MA", "MG", "MS", "MT", "PA", "PB", "PE", "PI", "PR",
-        "RJ", "RN", "RO", "RR", "RS", "SC", "SE", "SP", "TO"
+        "AC",
+        "AL",
+        "AM",
+        "AP",
+        "BA",
+        "CE",
+        "DF",
+        "ES",
+        "GO",
+        "MA",
+        "MG",
+        "MS",
+        "MT",
+        "PA",
+        "PB",
+        "PE",
+        "PI",
+        "PR",
+        "RJ",
+        "RN",
+        "RO",
+        "RR",
+        "RS",
+        "SC",
+        "SE",
+        "SP",
+        "TO",
     ],
     "month_name": [
-        "January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
     ],
     "day_name": [
-        "Monday", "Tuesday", "Wednesday", "Thursday",
-        "Friday", "Saturday", "Sunday"
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
     ],
 }
 
@@ -36,32 +96,19 @@ CATEGORICAL_FEATURES = {
 def validate_data(df):
     context = gx.get_context()
 
-    data_source = context.data_sources.add_pandas(
-        name="validation_source"
-    )
+    data_source = context.data_sources.add_pandas(name="validation_source")
 
-    data_asset = data_source.add_dataframe_asset(
-        name="features"
-    )
+    data_asset = data_source.add_dataframe_asset(name="features")
 
-    batch_definition = data_asset.add_batch_definition_whole_dataframe(
-        "features_batch"
-    )
+    batch_definition = data_asset.add_batch_definition_whole_dataframe("features_batch")
 
-    batch = batch_definition.get_batch(
-        batch_parameters={"dataframe": df}
-    )
+    batch = batch_definition.get_batch(batch_parameters={"dataframe": df})
 
     suite = gx.ExpectationSuite(name="olist_features_suite")
 
     for column in NUMERIC_FEATURES:
-        suite.add_expectation(
-            gx.expectations.ExpectColumnToExist(
-                column=column
-            )
-        )
+        suite.add_expectation(gx.expectations.ExpectColumnToExist(column=column))
 
-       
         suite.add_expectation(
             gx.expectations.ExpectColumnValuesToBeOfType(
                 column=column,
@@ -70,22 +117,14 @@ def validate_data(df):
         )
 
         suite.add_expectation(
-            gx.expectations.ExpectColumnValuesToNotBeNull(
-                column=column
-            )
+            gx.expectations.ExpectColumnValuesToNotBeNull(column=column)
         )
 
     for column, allowed_values in CATEGORICAL_FEATURES.items():
-        suite.add_expectation(
-            gx.expectations.ExpectColumnToExist(
-                column=column
-            )
-        )
+        suite.add_expectation(gx.expectations.ExpectColumnToExist(column=column))
 
         suite.add_expectation(
-            gx.expectations.ExpectColumnValuesToNotBeNull(
-                column=column
-            )
+            gx.expectations.ExpectColumnValuesToNotBeNull(column=column)
         )
 
         suite.add_expectation(

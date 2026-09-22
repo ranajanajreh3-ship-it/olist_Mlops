@@ -1,4 +1,3 @@
-
 import time
 import uuid
 
@@ -54,6 +53,7 @@ class InvalidInputError(Exception):
 # Inference / Pretrained Objects
 # ============================================================
 
+
 def load_transformer(transformer_path: str):
     logger.info("Loading transformer from %s", transformer_path)
     return joblib.load(transformer_path)
@@ -85,9 +85,7 @@ def prepare_inference_dataframe(
     )
 
     return pd.DataFrame(
-        X_transformed.toarray()
-        if hasattr(X_transformed, "toarray")
-        else X_transformed,
+        X_transformed.toarray() if hasattr(X_transformed, "toarray") else X_transformed,
         columns=features_name,
     )
 
@@ -95,6 +93,7 @@ def prepare_inference_dataframe(
 # ============================================================
 # Prepare Data
 # ============================================================
+
 
 def prepare_split_features_targets(
     train,
@@ -149,15 +148,14 @@ def transform_splits(
 # Baseline Model
 # ============================================================
 
+
 def train_baseline(
     X_train_transformed,
     y_train,
 ):
     logger.info("Training baseline model")
 
-    baseline = DummyClassifier(
-        strategy="most_frequent"
-    )
+    baseline = DummyClassifier(strategy="most_frequent")
 
     baseline.fit(
         X_train_transformed,
@@ -172,6 +170,7 @@ def train_baseline(
 # ============================================================
 # Logistic Regression
 # ============================================================
+
 
 def train_logistic_regression(
     X_train_transformed,
@@ -189,9 +188,7 @@ def train_logistic_regression(
         y_train,
     )
 
-    logger.info(
-        "Logistic regression model trained successfully"
-    )
+    logger.info("Logistic regression model trained successfully")
 
     return logistic_model
 
@@ -199,6 +196,7 @@ def train_logistic_regression(
 # ============================================================
 # Random Forest
 # ============================================================
+
 
 def train_random_forest(
     X_train_transformed,
@@ -218,9 +216,7 @@ def train_random_forest(
         y_train,
     )
 
-    logger.info(
-        "Random forest model trained successfully"
-    )
+    logger.info("Random forest model trained successfully")
 
     return rf_model
 
@@ -228,6 +224,7 @@ def train_random_forest(
 # ============================================================
 # Model Evaluation
 # ============================================================
+
 
 def evaluate_classification(
     y_true,
@@ -306,14 +303,13 @@ def print_confusion_matrix(
 # Random Forest Tuning
 # ============================================================
 
+
 def tune_random_forest(
     rf_model,
     X_train_transformed,
     y_train,
 ):
-    logger.info(
-        "Starting random forest hyperparameter tuning"
-    )
+    logger.info("Starting random forest hyperparameter tuning")
 
     param_grid = {
         "n_estimators": [100, 200, 300],
@@ -353,27 +349,21 @@ def tune_random_forest(
 # Probability & Threshold
 # ============================================================
 
+
 def predict_proba_late(
     model,
     X_transformed,
 ):
-    logger.info(
-        "Generating prediction probabilities"
-    )
+    logger.info("Generating prediction probabilities")
 
-    return model.predict_proba(
-        X_transformed
-    )[:, 0]
+    return model.predict_proba(X_transformed)[:, 0]
 
 
 def threshold_predictions(
     prob,
     threshold,
 ):
-    predictions = [
-        "late" if p >= threshold else "on time"
-        for p in prob
-    ]
+    predictions = ["late" if p >= threshold else "on time" for p in prob]
 
     logger.info(
         "Predictions generated using threshold %.2f",
@@ -492,6 +482,7 @@ def evaluate_at_threshold(
 # Final Model - Save / Load
 # ============================================================
 
+
 def save_final_model(
     model,
     path: str,
@@ -552,6 +543,7 @@ def load_final_threshold(
 # ============================================================
 # Final Results
 # ============================================================
+
 
 def build_final_results(
     model_name,
@@ -615,26 +607,24 @@ def save_final_results(
 # Serving - Input Validation
 # ============================================================
 
+
 def validate_input(
     x: pd.DataFrame,
     required_columns=MODEL_FEATURES,
 ):
     if x is None or len(x) == 0:
-        raise InvalidInputError(
-            "Input is empty"
-        )
+        raise InvalidInputError("Input is empty")
 
     missing = set(required_columns) - set(x.columns)
 
     if missing:
-        raise InvalidInputError(
-            f"Missing required columns: {sorted(missing)}"
-        )
+        raise InvalidInputError(f"Missing required columns: {sorted(missing)}")
 
 
 # ============================================================
 # Serving - Malformed Values
 # ============================================================
+
 
 def handle_malformed_values(
     x: pd.DataFrame,
@@ -670,15 +660,12 @@ def handle_malformed_values(
             n_missing = x[col].isna().sum()
 
             logger.warning(
-                "Column '%s' had %d missing value(s). "
-                "Filled with 'Unknown'.",
+                "Column '%s' had %d missing value(s). " "Filled with 'Unknown'.",
                 col,
                 n_missing,
             )
 
-            x[col] = x[col].fillna(
-                "Unknown"
-            )
+            x[col] = x[col].fillna("Unknown")
 
     return x
 
@@ -686,6 +673,7 @@ def handle_malformed_values(
 # ============================================================
 # Serving - Prediction Request
 # ============================================================
+
 
 def predict(
     x_raw: pd.DataFrame,
@@ -696,21 +684,14 @@ def predict(
     request_id: str = None,
 ):
 
-    request_id = request_id or str(
-        uuid.uuid4()
-    )
+    request_id = request_id or str(uuid.uuid4())
 
     start_time = time.time()
 
-    n_rows = (
-        len(x_raw)
-        if x_raw is not None
-        else 0
-    )
+    n_rows = len(x_raw) if x_raw is not None else 0
 
     logger.info(
-        "[%s] Prediction request received | "
-        "rows=%d | model_version=%s",
+        "[%s] Prediction request received | " "rows=%d | model_version=%s",
         request_id,
         n_rows,
         model_version,
@@ -719,11 +700,7 @@ def predict(
     logger.info(
         "[%s] Raw input: %s",
         request_id,
-        (
-            x_raw.to_dict(orient="records")
-            if x_raw is not None
-            else None
-        ),
+        (x_raw.to_dict(orient="records") if x_raw is not None else None),
     )
 
     try:
@@ -731,14 +708,10 @@ def predict(
         validate_input(x_raw)
 
         # Great Expectations validation
-        validation_passed = validate_data(
-            x_raw[MODEL_FEATURES]
-        )
+        validation_passed = validate_data(x_raw[MODEL_FEATURES])
 
         if not validation_passed:
-            raise InvalidInputError(
-                "Data validation failed"
-            )
+            raise InvalidInputError("Data validation failed")
 
         x_clean = handle_malformed_values(x_raw)
 
@@ -757,9 +730,7 @@ def predict(
             threshold,
         )
 
-        latency_ms = (
-            time.time() - start_time
-        ) * 1000
+        latency_ms = (time.time() - start_time) * 1000
 
         logger.info(
             "[%s] Prediction success | "
@@ -781,14 +752,10 @@ def predict(
 
     except InvalidInputError as e:
 
-        latency_ms = (
-            time.time() - start_time
-        ) * 1000
+        latency_ms = (time.time() - start_time) * 1000
 
         logger.error(
-            "[%s] Invalid input | "
-            "error=%s | latency_ms=%.2f | "
-            "model_version=%s",
+            "[%s] Invalid input | " "error=%s | latency_ms=%.2f | " "model_version=%s",
             request_id,
             e,
             latency_ms,
@@ -804,9 +771,7 @@ def predict(
 
     except Exception:
 
-        latency_ms = (
-            time.time() - start_time
-        ) * 1000
+        latency_ms = (time.time() - start_time) * 1000
 
         logger.exception(
             "[%s] Unexpected error during prediction | "

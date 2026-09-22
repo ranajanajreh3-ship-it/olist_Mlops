@@ -23,21 +23,29 @@ MODEL_FEATURES = NUMERICAL_FEATURES + CATEGORICAL_FEATURES
 
 
 def aggregate_order_items(order_items):
-    items_agg = order_items.groupby("order_id").agg(
-        total_items=("order_item_id", "count"),
-        total_price=("price", "sum"),
-        total_freight_value=("freight_value", "sum"),
-    ).reset_index()
+    items_agg = (
+        order_items.groupby("order_id")
+        .agg(
+            total_items=("order_item_id", "count"),
+            total_price=("price", "sum"),
+            total_freight_value=("freight_value", "sum"),
+        )
+        .reset_index()
+    )
 
     return items_agg
 
 
 def aggregate_order_payments(order_payments):
-    payment_agg = order_payments.groupby("order_id").agg(
-        total_payment=("payment_value", "sum"),
-        max_installments=("payment_installments", "max"),
-        payment_count=("payment_sequential", "count"),
-    ).reset_index()
+    payment_agg = (
+        order_payments.groupby("order_id")
+        .agg(
+            total_payment=("payment_value", "sum"),
+            max_installments=("payment_installments", "max"),
+            payment_count=("payment_sequential", "count"),
+        )
+        .reset_index()
+    )
 
     return payment_agg
 
@@ -62,10 +70,12 @@ def create_delivery_status_label(ml_table):
     ml_table["delivery_status"] = (
         ml_table["order_delivered_customer_date"]
         <= ml_table["order_estimated_delivery_date"]
-    ).map({
-        True: "on time",
-        False: "late",
-    })
+    ).map(
+        {
+            True: "on time",
+            False: "late",
+        }
+    )
 
     return ml_table
 
@@ -81,12 +91,7 @@ def haversine(lat1, lon1, lat2, lon2):
     dlat = lat2 - lat1
     dlon = lon2 - lon1
 
-    a = (
-        np.sin(dlat / 2) ** 2
-        + np.cos(lat1)
-        * np.cos(lat2)
-        * np.sin(dlon / 2) ** 2
-    )
+    a = np.sin(dlat / 2) ** 2 + np.cos(lat1) * np.cos(lat2) * np.sin(dlon / 2) ** 2
 
     c = 2 * np.arcsin(np.sqrt(a))
 
@@ -101,9 +106,13 @@ def add_geo_features(
     sellers,
     gelocation,
 ):
-    geo_grouped = gelocation.groupby(
-        "geolocation_zip_code_prefix"
-    )[["geolocation_lat", "geolocation_lng"]].mean().reset_index()
+    geo_grouped = (
+        gelocation.groupby("geolocation_zip_code_prefix")[
+            ["geolocation_lat", "geolocation_lng"]
+        ]
+        .mean()
+        .reset_index()
+    )
 
     temp_geo = (
         df[["order_id"]]
@@ -179,9 +188,7 @@ def add_geo_features(
 
 
 def add_date_features(df):
-    df["order_purchase_timestamp"] = pd.to_datetime(
-        df["order_purchase_timestamp"]
-    )
+    df["order_purchase_timestamp"] = pd.to_datetime(df["order_purchase_timestamp"])
 
     df["month_name"] = df["order_purchase_timestamp"].dt.month_name()
     df["day_name"] = df["order_purchase_timestamp"].dt.day_name()
@@ -229,9 +236,7 @@ def build_geo_table(
         )
     )
 
-    order_seller = order_items[
-        ["order_id", "seller_id"]
-    ].drop_duplicates("order_id")
+    order_seller = order_items[["order_id", "seller_id"]].drop_duplicates("order_id")
 
     geo = geo.merge(
         order_seller,
@@ -245,13 +250,15 @@ def build_geo_table(
         how="left",
     )
 
-    geo_ave = gelocation.groupby(
-        "geolocation_zip_code_prefix"
-    )[["geolocation_lat", "geolocation_lng"]].mean().reset_index()
+    geo_ave = (
+        gelocation.groupby("geolocation_zip_code_prefix")[
+            ["geolocation_lat", "geolocation_lng"]
+        ]
+        .mean()
+        .reset_index()
+    )
 
-    customer_location = customers[
-        ["customer_id", "customer_zip_code_prefix"]
-    ].merge(
+    customer_location = customers[["customer_id", "customer_zip_code_prefix"]].merge(
         geo_ave,
         left_on="customer_zip_code_prefix",
         right_on="geolocation_zip_code_prefix",
@@ -265,9 +272,7 @@ def build_geo_table(
         }
     )
 
-    sellers_location = sellers[
-        ["seller_id", "seller_zip_code_prefix"]
-    ].merge(
+    sellers_location = sellers[["seller_id", "seller_zip_code_prefix"]].merge(
         geo_ave,
         left_on="seller_zip_code_prefix",
         right_on="geolocation_zip_code_prefix",
@@ -282,17 +287,13 @@ def build_geo_table(
     )
 
     geo = geo.merge(
-        customers_location[
-            ["customer_id", "customer_lat", "customer_lng"]
-        ],
+        customers_location[["customer_id", "customer_lat", "customer_lng"]],
         on="customer_id",
         how="left",
     )
 
     geo = geo.merge(
-        sellers_location[
-            ["seller_id", "seller_lat", "seller_lng"]
-        ],
+        sellers_location[["seller_id", "seller_lat", "seller_lng"]],
         on="seller_id",
         how="left",
     )

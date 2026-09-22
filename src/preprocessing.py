@@ -103,9 +103,7 @@ def transform_new_data(transformer, x):
 
 def to_dataframe(X_transformed, features_name):
     return pd.DataFrame(
-        X_transformed.toarray()
-        if hasattr(X_transformed, "toarray")
-        else X_transformed,
+        X_transformed.toarray() if hasattr(X_transformed, "toarray") else X_transformed,
         columns=features_name,
     )
 
