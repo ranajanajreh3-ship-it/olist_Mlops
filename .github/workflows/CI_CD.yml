@@ -7,13 +7,24 @@ jobs:                           #Github executes a specific set of tasks
   quality:                      # github ensures the code quality
     runs-on: ubuntu-latest      # the eniviroment where the job executes 
     steps:
-      - uses: actions/checkout@v4       #domnlode the files project 
-        with:                           
-         python-version: "3.13" 
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5 
+        with:
+         python-version: "3.13"
       - name: Install dependencies
         run: |
+         pip install dvc
          pip install -r requirements/requirements.txt
-         pip install -r requirements/requirements-dev.txt     # Install all the libraries that my project needs.
+         pip install -r requirements/requirements-dev.txt
+      - name: Configure DVC
+        run: |
+         dvc remote modify --local dagshub auth basic
+         dvc remote modify --local dagshub user ${{ secrets.DAGSHUB_USER }}
+         dvc remote modify --local dagshub password ${{ secrets.DAGSHUB_TOKEN }}
+
+      - name: Pull DVC artifacts
+        run: dvc pull
       - name: Lint                 #Lint looks for problems or errors in Python's writing style.
         run: ruff check .  
       - name: Format check
