@@ -19,4 +19,4 @@ jobs:                           #Github executes a specific set of tasks
       - name: Format check
         run: black --check .       #black ensure that the Python code format is neat and rules-compliant.
       - name: Tests
-        run: pytest  
+        run: PYTHONPATH=. pytest  
