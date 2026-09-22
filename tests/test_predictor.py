@@ -4,7 +4,7 @@ from src.predictor import threshold_predictions, predict_proba_late
 from src.preprocessing import impute_numerical_features
 from src.features import add_date_features
 from src.validation import validate_data
-from app.model_loader import load_model
+from src.predictor import load_final_model
 from src.features import MODEL_FEATURES
 
 
@@ -154,7 +154,7 @@ def test_validate_data_missing_column():
 
 
 def test_model_loads():
-    model = load_model()
+    model = load_final_model("models/final_random_forest.pkl")
 
     assert model is not None
 
@@ -162,7 +162,7 @@ def test_model_loads():
 def test_model_predicts():
     import joblib
 
-    model = load_model()
+    model = load_final_model("models/final_random_forest.pkl")
     transformer = joblib.load("models/transformer.pkl")
 
     df = pd.DataFrame(
@@ -191,7 +191,7 @@ def test_model_predicts():
 def test_model_prediction_type():
     import joblib
 
-    model = load_model()
+    model = load_final_model("models/final_random_forest.pkl")
     transformer = joblib.load("models/transformer.pkl")
 
     df = pd.DataFrame(

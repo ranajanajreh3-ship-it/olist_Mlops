@@ -1,5 +1,24 @@
 from fastapi.testclient import TestClient
-from app.main import app
+from unittest.mock import patch
+import numpy as np
+
+
+class FakeModel:
+    def predict_proba(self, X):
+        return np.array([[0.6, 0.4]] * X.shape[0])
+
+
+with patch("app.model_loader.load_model", return_value=FakeModel()):
+    with patch(
+        "app.model_loader.get_model_info",
+        return_value={
+            "model_name": "OlistDeliveryModel",
+            "alias": "champion",
+            "version": "test",
+        },
+    ):
+        from app.main import app
+
 
 client = TestClient(app)
 

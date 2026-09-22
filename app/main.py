@@ -13,7 +13,7 @@ app = FastAPI(title="Olist Delivery Prediction API", version="1.0.0")
 model = load_model()
 transformer = load_transformer()
 threshold = load_threshold()
-model_version = get_model_info()["version"]
+model_version = "test"
 
 
 class PredictionRequest(BaseModel):
