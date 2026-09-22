@@ -1,7 +1,7 @@
 import pandas as pd
 from fastapi import FastAPI
 from pydantic import BaseModel, Field
-from app.model_loader import(
+from app.model_loader import (
     get_model_info,
     load_model,
     load_transformer,
@@ -9,14 +9,12 @@ from app.model_loader import(
 )
 from src.predictor import predict as run_prediction
 
-app = FastAPI(
-    title="Olist Delivery Prediction API",
-    version="1.0.0"
-)
+app = FastAPI(title="Olist Delivery Prediction API", version="1.0.0")
 model = load_model()
 transformer = load_transformer()
 threshold = load_threshold()
 model_version = get_model_info()["version"]
+
 
 class PredictionRequest(BaseModel):
     total_items: float = Field(ge=1)
@@ -48,13 +46,16 @@ class BatchPredictionRequest(BaseModel):
 class BatchPredictionResponse(BaseModel):
     results: list[PredictionResponse]
 
+
 @app.get("/health")
 def health():
     return {"status": "ok"}
 
+
 @app.get("/model-info")
 def model_info():
     return get_model_info()
+
 
 @app.post("/predict", response_model=PredictionResponse)
 def predict(request: PredictionRequest):
@@ -69,6 +70,8 @@ def predict(request: PredictionRequest):
     )
 
     return result
+
+
 @app.post("/predict/batch", response_model=BatchPredictionResponse)
 def predict_batch(request: BatchPredictionRequest):
     results = []

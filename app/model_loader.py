@@ -3,10 +3,7 @@ import joblib
 import os
 from mlflow import MlflowClient
 
-MLFLOW_TRACKING_URI = os.getenv(
-    "MLFLOW_TRACKING_URI",
-    "http://127.0.0.1:5000"
-)
+MLFLOW_TRACKING_URI = os.getenv("MLFLOW_TRACKING_URI", "http://127.0.0.1:5000")
 MODEL_NAME = "OlistDeliveryModel"
 MODEL_ALIAS = "champion"
 
@@ -16,16 +13,9 @@ def load_model():
 
     client = MlflowClient()
 
-    model_version = client.get_model_version_by_alias(
-        MODEL_NAME,
-        MODEL_ALIAS
-    )
+    model_version = client.get_model_version_by_alias(MODEL_NAME, MODEL_ALIAS)
 
-    model_uri = model_version.source.replace(
-        "run:/",
-        "runs:/",
-        1
-    )
+    model_uri = model_version.source.replace("run:/", "runs:/", 1)
 
     model = mlflow.sklearn.load_model(model_uri)
 
@@ -37,10 +27,7 @@ def get_model_info():
 
     client = MlflowClient()
 
-    model_version = client.get_model_version_by_alias(
-        MODEL_NAME,
-        MODEL_ALIAS
-    )
+    model_version = client.get_model_version_by_alias(MODEL_NAME, MODEL_ALIAS)
 
     return {
         "model_name": MODEL_NAME,
