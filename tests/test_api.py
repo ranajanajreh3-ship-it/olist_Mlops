@@ -10,6 +10,7 @@ def test_health():
     assert response.status_code == 200
     assert response.json() == {"status": "ok"}
 
+
 def test_model_info():
     response = client.get("/model-info")
 
@@ -20,6 +21,7 @@ def test_model_info():
     assert data["model_name"] == "OlistDeliveryModel"
     assert data["alias"] == "champion"
     assert "version" in data
+
 
 def test_predict():
     payload = {
@@ -50,6 +52,7 @@ def test_predict():
 
     assert len(data["predictions"]) == 1
     assert len(data["probabilities_late"]) == 1
+
 
 def test_predict_batch():
     payload = {
@@ -98,6 +101,7 @@ def test_predict_batch():
         assert "probabilities_late" in result
         assert "model_version" in result
         assert "latency_ms" in result
+
 
 def test_predict_invalid_payload():
     payload = {
