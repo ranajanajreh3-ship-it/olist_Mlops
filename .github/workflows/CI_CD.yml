@@ -20,8 +20,8 @@ jobs:                           #Github executes a specific set of tasks
         uses: docker/login-action@v3
         with:
          registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Install dependencies
         run: |
          pip install dvc
