@@ -1,0 +1,20 @@
+name: CI/CD                      #pipeline name 
+
+on:                              #When I push run the pipeline 
+  push:
+
+jobs:                           #Github executes a specific set of tasks 
+  quality:                      # github ensures the code quality
+    runs-on: ubuntu-latest      # the eniviroment where the job executes 
+    steps:
+      - uses: actions/checkout@v4       #domnlode the files project 
+        with:                           
+         python-version: "3.13" 
+      - name: Install dependencies
+        run: pip install -r requirements/requirements.txt      # Install all the libraries that my project needs.
+      - name: Lint                 #Lint looks for problems or errors in Python's writing style.
+        run: ruff check .  
+      - name: Format check
+        run: black --check .       #black ensure that the Python code format is neat and rules-compliant.
+      - name: Tests
+        run: pytest  
