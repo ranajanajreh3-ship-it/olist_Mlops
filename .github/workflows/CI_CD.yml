@@ -1,7 +1,11 @@
 name: CI/CD                      #pipeline name 
 
-on:                              #When I push run the pipeline 
+on:
   push:
+
+permissions:
+  contents: read
+  packages: write
 
 jobs:                           #Github executes a specific set of tasks 
   quality:                      # github ensures the code quality
@@ -12,6 +16,12 @@ jobs:                           #Github executes a specific set of tasks
       - uses: actions/setup-python@v5 
         with:
          python-version: "3.13"
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+         registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
       - name: Install dependencies
         run: |
          pip install dvc
@@ -31,3 +41,7 @@ jobs:                           #Github executes a specific set of tasks
         run: black --check .       #black ensure that the Python code format is neat and rules-compliant.
       - name: Tests
         run: PYTHONPATH=. pytest  
+      - name: Build Docker image
+        run: docker build -t ghcr.io/${{ github.repository }}:latest .
+      - name: Push Docker image
+        run: docker push ghcr.io/${{ github.repository }}:latest
