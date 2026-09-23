@@ -1,415 +1,447 @@
+\# Olist MLOps Project
 
-# Olist MLOps Project
+
 
 ## Overview
 
-This project builds an end-to-end machine learning and MLOps pipeline for predicting whether an Olist e-commerce order will be delivered **late** or **on time**.
 
-The project was developed as part of the **Qafzah MLOps Training Program**.
 
+This project builds an end-to-end machine learning and MLOps pipeline... for predicting whether an Olist e-commerce order will be delivered late or on time.
+
+
+
+The project was developed as part of the Qafzah MLOps Training Program.
 The project covers the complete workflow from data preparation and model development to deployment, experiment tracking, testing, CI/CD, logging, and monitoring.
 
----
 
-## Machine Learning Task
 
-The target variable is:
+\## Project Structure
+
+
 
 ```text
-delivery_statusThe model predicts one of two classes:
 
-late
-on time
-
-The project uses a time-based train/validation/test split to reduce data leakage and better represent a real-world prediction scenario.
-
-Prediction Threshold
-
-The final prediction threshold is:
-
-0.4
-
-A prediction is classified as late when the predicted probability of being late is greater than or equal to the threshold.
-
-Dataset
-
-The project uses the Brazilian E-Commerce Public Dataset by Olist.
-
-The dataset contains information related to:
-
-Orders
-Customers
-Sellers
-Products
-Payments
-Delivery dates
-
-The data was processed and transformed into features suitable for machine learning.
-
-Project Structure
-olist_Mlops/
+olist\_Mlops/
 
 │
-├── app/                         # FastAPI application
-│
-├── config/                      # Project configuration
-│
-├── data/                        # Datasets and DVC metadata
-│
-├── models/                      # Model and preprocessing artifacts
-│
-├── notebooks/                   # Data analysis and ML development
-│
-├── requirements/                # Project dependencies
+
+├── app/                    # Application and API
+
+├── config/                 # Project configuration
+
+├── data/                   # Datasets
+
+├── models/                 # Saved models and preprocessing objects
+
+├── notebooks/              # Jupyter notebooks
+
+├── requirements/            # Project dependencies
 │   ├── requirements.txt
 │   ├── requirements-runtime.txt
 │   └── requirements-dev.txt
-│
-├── src/                         # Reusable Python modules
-│
-├── tests/                       # Automated tests
-│
-├── logs/                        # Prediction logs
-│
-├── Dockerfile                   # FastAPI Docker image
-├── Dockerfile.mlflow            # MLflow Docker image
-├── docker-compose.yml           # Multi-service Docker setup
-├── .env.example                 # Environment variable template
-├── .gitignore
+├── src/                    # Reusable Python modules
+├── tests/                  # Tests
+├── Dockerfile              # API Docker image
+├── Dockerfile.mlflow       # MLflow Docker image
+├── docker-compose.yml      # Multi-service Docker stack
+├── .env.example            # Environment variable template
 ├── README.md
-└── .github/
-    └── workflows/
-        └── CI_CD.yml            # GitHub Actions workflow
-Machine Learning Pipeline
+└── .gitignore
 
-The machine learning workflow was developed through several notebooks covering the main stages of the project:
+```
 
-Data preparation
-Label creation
-Train/validation/test splitting
-Exploratory data analysis
-Feature engineering
-Model training, tuning, and evaluation
 
-The reusable logic was then refactored into Python modules under:
 
-src/
-Features
+\## Dataset
 
-The final prediction pipeline uses numerical and categorical features related to the order and delivery process.
 
-Numerical Features
-total_items
-total_price
-total_freight_value
-total_payment
-max_installments
-payment_count
-distance_km
-Categorical Features
-month_name
-day_name
-customer_state
-seller_state
 
-The preprocessing pipeline is saved and reused during prediction to ensure that production data is transformed consistently with the training data.
+The project uses the Brazilian E-Commerce Public Dataset by Olist.
 
-Model
 
-The selected machine learning model is a tuned Random Forest Classifier.
 
-The trained model and preprocessing artifacts are stored under:
+The dataset contains information about orders, customers, sellers, products, payments, and deliveries.
 
-models/
 
-Important model artifacts include:
 
-models/final_random_forest.pkl
-models/transformer.pkl
-models/final_threshold.pkl
-Configuration
+\## Machine Learning Task
 
-Project paths and important parameters are stored in:
+
+
+The target variable is:
+
+
+
+```text
+
+delivery\_status
+
+```
+
+
+
+The model predicts whether an order is:
+
+
+
+\* `late`
+
+\* `on time`
+
+
+
+A time-based train/validation/test split is used to reduce data leakage and better represent real-world prediction.
+
+
+
+\## Model
+
+
+
+The current selected model is a tuned Random Forest classifier.
+
+
+
+The prediction threshold is currently:
+
+
+
+```text
+
+0.4
+
+```
+
+
+
+The trained model and preprocessing objects are stored in the `models/` directory.
+
+
+
+\## Configuration
+
+
+
+Project paths and parameters are stored in:
+
+
+
+```text
 
 config/config.yaml
 
-This helps avoid hardcoding important paths and parameters directly inside the Python code.
+```
 
-Data Versioning with DVC
 
-DVC (Data Version Control) is used to track datasets and trained model artifacts.
+
+This avoids hardcoding paths and important parameters inside the Python code.
+
+
+
+\## Installation
+
+
+
+Create and activate a Python virtual environment:
+
+
+
+```bash
+
+python -m venv .venv
+
+```
+
+
+
+Activate it on Windows:
+
+
+
+```powershell
+
+.venv\\Scripts\\activate
+
+```
+
+
+
+Install the project dependencies:
+
+
+
+```powershell
+
+pip install -r requirements/requirements.txt
+
+```
+
+
+
+For development and testing:
+
+
+
+```powershell
+
+pip install -r requirements/requirements-dev.txt
+
+```
+
+
+
+\## Running the Project
+
+
+
+The machine learning workflow is currently developed and validated through the notebooks in:
+
+
+
+```text
+
+notebooks/
+
+```
+
+
+
+The notebooks cover:
+
+
+
+1\. Data preparation
+
+2\. Label creation
+
+3\. Train/validation/test splitting
+
+4\. Exploratory data analysis
+
+5\. Feature engineering
+
+6\. Model training, tuning, and evaluation
+
+
+
+The reusable Python modules are located in:
+
+
+
+```text
+
+src/
+
+```
+
+
+
+as the project is refactored into an MLOps pipeline.
+
+
+
+\## MLOps Components
+
+
+
+The project includes:
+
+
+\* Configuration management
+
+\* Data versioning with DVC
+
+\* Data validation with Great Expectations
+
+\* Experiment tracking and model registry with MLflow
+
+\* Automated testing with pytest
+
+\* FastAPI prediction service
+
+\* Docker and Docker Compose
+
+* CI/CD
+* Logging
+* Monitoring
+
+
+## Development Status
+
+The core machine learning pipeline and the main MLOps components have been implemented, including:
+
+* Configuration management
+* Data and artifact versioning with DVC
+* Data validation with Great Expectations
+* Experiment tracking and model registry with MLflow
+* Automated testing with pytest
+* FastAPI prediction service
+* Logging
+* Monitoring
+* Docker and Docker Compose
+* CI/CD with GitHub Actions
+* Docker image publishing
+
+The project includes the main components required for an end-to-end MLOps workflow and is ready for final submission.
+## Data Versioning & Validation
+
+### Data and Artifact Versioning
+
+DVC (Data Version Control) is used to track the datasets and trained model artifacts used by the project. This allows each experiment and prediction result to be traced back to the corresponding version of the data and model files.
 
 The following files are tracked using DVC:
 
-data/train.csv
-data/validation.csv
-data/test.csv
+* `data/train.csv`
+* `data/validation.csv`
+* `data/test.csv`
+* `models/final_random_forest.pkl`
+* `models/transformer.pkl`
+* `models/final_threshold.pkl`
 
-models/final_random_forest.pkl
-models/transformer.pkl
-models/final_threshold.pkl
+### Data Validation
 
-DVC allows the project to keep track of the versions of data and model artifacts used throughout development.
+Great Expectations is used to validate incoming model features before they reach the preprocessing and prediction stages.
 
-The project uses a DVC remote hosted through DagsHub.
+The validation checks include:
 
-Data Validation
+* Required columns exist.
+* Numeric columns have the expected data type.
+* Numeric columns do not contain missing values.
+* Numeric values satisfy the defined minimum ranges.
+* Categorical columns do not contain missing values.
+* Categorical values belong to the allowed set of values.
 
-Great Expectations is used to validate input features before they reach the preprocessing and prediction stages.
+### Validation Failure Policy
 
-Validation checks include:
+The service uses a **Reject** policy when validation fails.
 
-Required columns exist
-Numeric columns have the expected data type
-Numeric columns do not contain missing values
-Numeric values satisfy defined minimum ranges
-Categorical columns do not contain missing values
-Categorical values belong to the allowed set of values
-Validation Failure Policy
-
-The service uses a Reject policy when validation fails.
+If the input data does not satisfy the defined expectations, the request is rejected and the model is not executed.
 
 The prediction flow is:
 
-Input
-  ↓
-Great Expectations Validation
-  ↓
-Reject if Invalid
-  ↓
-Preprocessing
-  ↓
-Model
-  ↓
-Prediction
+`Input → Great Expectations Validation → Reject if Invalid → Preprocessing → Model → Prediction`
 
-Invalid requests are rejected before the model is executed.
-
-MLflow
-
-MLflow is used for:
-
-Experiment tracking
-Model management
-Model registry
-Model versioning
-Model aliases
-
-The registered model is:
-
-OlistDeliveryModel
-
-The production model uses the:
-
-champion
-
-alias.
-
-The MLflow backend store uses PostgreSQL, while model artifacts are stored using MinIO as S3-compatible object storage.
-
-FastAPI
-
-The machine learning model is served through a FastAPI application.
-
-The API provides endpoints for:
-
-Health checking
-Model information
-Single predictions
-Batch predictions
-Prometheus metrics
-API Documentation
-
-Once the service is running:
-
-http://localhost:8000/docs
-Health Check
-http://localhost:8000/health
-Model Information
-http://localhost:8000/model-info
-Metrics
-http://localhost:8000/metrics
-Docker and Docker Compose
+## Docker & Docker Compose
 
 The project is containerized using Docker and Docker Compose.
 
-The Docker environment includes:
+The Docker setup includes the following services:
 
-FastAPI
-PostgreSQL
-MLflow
-MinIO
+* **API** — FastAPI prediction service.
+* **PostgreSQL** — MLflow backend store.
+* **MLflow** — Experiment tracking and model registry.
+* **MinIO** — S3-compatible artifact storage.
 
-The API image uses:
+### Dockerfile
 
-python:3.13-slim
+The API uses a lightweight `python:3.13-slim` base image.
 
 The API image contains only the files required at runtime:
 
-app/
-src/
-config/
-models/
-requirements/requirements-runtime.txt
+* `app/`
+* `src/`
+* `config/`
+* `models/`
+* `requirements/requirements-runtime.txt`
 
-Jupyter notebooks and development datasets are not copied into the API image.
+Jupyter notebooks and project datasets are not copied into the API image.
 
-Environment Variables
+### Environment Variables
 
-Sensitive credentials and connection settings are stored locally in a .env file.
+Sensitive credentials and connection settings are stored in a local `.env` file and are not committed to Git.
 
-The .env file is not committed to Git.
+An `.env.example` file is provided as a template:
 
-An example template is provided:
-
-.env.example
-
-Example variables:
-
+```text
 POSTGRES_PASSWORD=your_postgres_password
 MINIO_ROOT_USER=your_minio_user
 MINIO_ROOT_PASSWORD=your_minio_password
-Running the Project
-1. Clone the Repository
-git clone https://github.com/ranajanajreh3-ship-it/olist_Mlops.git
-cd olist_Mlops
-2. Create the Environment File
+```
 
-Create a .env file based on:
+The `.env` file is included in `.gitignore`.
 
-.env.example
+### Running with Docker Compose
 
-Add the required local configuration values.
+The complete system can be started with a single command:
 
-3. Start the System
+```powershell
+docker compose up -d
+```
 
-The complete Docker environment can be started with:
+Docker Compose starts PostgreSQL, MinIO, MLflow, the MLflow initialization service, and the FastAPI service.
 
-docker compose up -d --build
+MLflow includes a health check, and the API waits for MLflow to become healthy before starting.
 
-Docker Compose starts the required services and their dependencies.
+### API
 
-Services
+Once the containers are running, the FastAPI Swagger documentation is available at:
 
-The project uses the following services:
+```text
+http://localhost:8000/docs
+```
 
-Service	Port
-FastAPI	8000
-MLflow	5000
-MinIO API	9000
-MinIO Console	9001
-PostgreSQL	5432
-MLflow
+The API health endpoint can be checked at:
+
+```text
+http://localhost:8000/health
+```
+
+### MLflow
 
 MLflow is available at:
 
+```text
 http://localhost:5000
+```
 
-The MLflow environment uses:
+The MLflow backend uses PostgreSQL, while model artifacts are stored in MinIO.
 
-PostgreSQL → Backend Store
-MinIO      → Artifact Storage
+The MLflow initialization service automatically checks whether the registered model `OlistDeliveryModel` has the `champion` alias. If the model is already registered, no duplicate model version is created.
 
-The MLflow initialization process checks whether the registered model already has the champion alias before creating a new model version.
+### Service Ports
 
-Testing
+| Service       | Port |
+| ------------- | ---: |
+| FastAPI       | 8000 |
+| MLflow        | 5000 |
+| MinIO API     | 9000 |
+| MinIO Console | 9001 |
+| PostgreSQL    | 5432 |
 
-The project uses pytest for automated testing.
-
-Run the tests with:
-
-PYTHONPATH=. pytest
-
-The project test suite includes tests for the main application and prediction pipeline.
-
-Code Quality
-
-The project uses:
-
-Ruff
-Ruff Format
-Pre-commit
-
-Run Ruff:
-
-ruff check .
-
-Run formatting checks:
-
-ruff format --check .
-
-Run all pre-commit hooks:
-
-pre-commit run --all-files
-CI/CD
-
-The project uses GitHub Actions for continuous integration and deployment.
-
-The workflow is located at:
-
-.github/workflows/CI_CD.yml
-
-The CI/CD pipeline performs tasks including:
-
-Checkout the repository
-Set up Python
-Install dependencies
-Configure DVC
-Pull versioned data and model artifacts
-Run Ruff
-Check code formatting
-Run automated tests
-Build the Docker image
-Push the Docker image to GitHub Container Registry
-
-The Docker image is published to:
-
-ghcr.io/ranajanajreh3-ship-it/olist_mlops
-Logging
+## Logging
 
 The API records prediction information in:
 
-logs/predictions.csv
-
+```text
+logs/predictions.csv 
 The prediction log contains information such as:
-
 timestamp
 request_id
 prediction
 probability_late
 model_version
 latency_ms
-
 These logs allow predictions to be reviewed later and provide a basis for evaluating predictions against the actual delivery outcome once the real delivery date becomes available.
 
-Monitoring
+## Monitoring
 
 The API exposes monitoring metrics through:
 
+```text
 http://localhost:8000/metrics
-
 Prometheus-compatible metrics include:
-
-Request Metrics
+Request Metrics:
 api_requests_total
-
 Tracks the total number of API requests.
-
-Request Latency
+Request Latency:
 api_request_latency_seconds
-
 Tracks API request latency.
-
-API Errors
+API Errors:
 api_errors_total
-
 Tracks API errors.
-
-Prediction Distribution
+Prediction Distribution:
 api_predictions_total
-
 Tracks the number of predictions for each prediction class.
-
 Late Prediction Rate
 api_late_prediction_rate
 
@@ -426,14 +458,15 @@ The baseline late-prediction rate is approximately:
 
 This provides a simple monitoring mechanism for changes in prediction distribution over time.
 
-Monitoring and Alerts
+## Monitoring and Alerts
 
-The following alert conditions are defined for the prediction service:
+The following alert conditions are defined for the prediction service.
 
-Error Rate Alert
+### Error Rate Alert
 
 Trigger an alert when the API error rate exceeds:
 
+```text
 5%
 Latency Alert
 
@@ -446,42 +479,23 @@ Trigger an alert when the absolute difference between the current late-predictio
 
 10 percentage points
 
-These thresholds provide initial operational monitoring rules for the deployed prediction service.
+## CI/CD
 
-Security and Secrets
+The project uses **GitHub Actions** for continuous integration and deployment.
 
-Sensitive credentials are not stored directly in the source code.
+The workflow is located at:
 
-The project uses environment variables for sensitive configuration, and the local .env file is excluded from Git through .gitignore.
+```text
+.github/workflows/CI_CD.yml
+The CI/CD pipeline performs the following tasks:
 
-GitHub Actions uses repository secrets for CI/CD credentials such as DVC/DagsHub authentication.
-
-Repository
-
-The complete project is available on GitHub:
-
-https://github.com/ranajanajreh3-ship-it/olist_Mlops
-Project Status
-
-The project currently includes the main components of an end-to-end MLOps workflow:
-
-Machine learning model development
-Data preprocessing and feature engineering
-Data validation with Great Expectations
-Data and artifact versioning with DVC
-Experiment tracking with MLflow
-Model registry and model aliasing
-FastAPI prediction service
-Docker and Docker Compose
-Automated testing with pytest
-Code quality checks with Ruff
-Pre-commit hooks
-CI/CD with GitHub Actions
-Docker image publishing
-Prediction logging
-Service monitoring
-Prediction distribution monitoring
-Prediction drift monitoring
-Defined monitoring alert thresholds
-
-The project is ready for final submission.
+Checkout the repository
+Set up Python
+Install project dependencies
+Configure DVC
+Pull versioned data and model artifacts
+Run Ruff
+Check code formatting
+Run automated tests
+Build the Docker image
+Push the Docker image to GitHub Container Registry
